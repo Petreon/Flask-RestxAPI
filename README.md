@@ -15,4 +15,4 @@ Creating a REST API Project using Flask_RESTx and JWT authentication
 - /auth/login/ METHOD: POST, Login User
 
 ## Database "diagram"
-![diagram](https://drive.google.com/file/d/1UTs1w86t7uHtQucKyvmWdSDWH9_ldUfR/view?usp=sharing)
+![diagram](https://drive.google.com/file/d/1eaykEzhJ4U_oELfxVBJmWwmP1LxeOGtz/view?usp=sharing)
