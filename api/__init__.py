@@ -3,6 +3,11 @@ from flask_restx import Api
 from .orders.views import order_namespace
 from .auth.views import auth_namespace
 from .config.config import config_dict
+from .utils import db
+from .models.orders import Order
+from .models.users import User
+from flask_migrate import Migrate
+
 
 def create_app(config=config_dict['dev']):
     # using a function factory to create the app
@@ -10,9 +15,21 @@ def create_app(config=config_dict['dev']):
 
     app.config.from_object(config)
 
+    db.init_app(app)
+
+    migrate = Migrate(app,db)
+
     api = Api(app)
 
     api.add_namespace(order_namespace)
     api.add_namespace(auth_namespace)
+
+    @app.shell_context_processor
+    def make_shell_context():
+        return {
+            'db':db,
+            'User':User,
+            'Order':Order
+        }
 
     return app
