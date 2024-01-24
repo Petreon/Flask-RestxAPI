@@ -16,9 +16,16 @@ the sqlite database will be created in config folder with th default paramaters
 - db.create_all()
 - 
 # API ROUTES
+when a JWT token is required we need to put in the headers, Authorization : value: Bearer token_id
+
 - /auth/signup/ METHOD: POST, Register a new User
 - /auth/login/ METHOD: POST, Login User
 - /auth/refresh METHOD: POST, Get a new JWT token, need to have: header: Authorization , value: Bearer token_id
+- /orders/ METHOD: GET , Get all orders , jwt token required
+- /orders/ METHOD: POST , create a new post , jwt token required, minimun json required example {"quantity":1,
+    "flavour":"RUM",
+    "order_status":"PENDING",
+    "size":"SMALL"}
 
 ## Database "diagram"
 ![diagram](https://github.com/Petreon/Flask-RestxAPI/raw/main/database_diagram.drawio.png)

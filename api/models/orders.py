@@ -29,4 +29,10 @@ class Order(db.Model):
 
     def __repr__(self) -> str:
         return f"<Order {self.id}>"
+    
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+    
+
 
