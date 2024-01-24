@@ -18,6 +18,7 @@ the sqlite database will be created in config folder with th default paramaters
 # API ROUTES
 - /auth/signup/ METHOD: POST, Register a new User
 - /auth/login/ METHOD: POST, Login User
+- /auth/refresh METHOD: POST, Get a new JWT token, need to have: header: Authorization , value: Bearer token_id
 
 ## Database "diagram"
 ![diagram](https://github.com/Petreon/Flask-RestxAPI/raw/main/database_diagram.drawio.png)

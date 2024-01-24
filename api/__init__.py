@@ -7,6 +7,7 @@ from .utils import db
 from .models.orders import Order
 from .models.users import User
 from flask_migrate import Migrate
+from flask_jwt_extended import JWTManager
 
 
 def create_app(config=config_dict['dev']):
@@ -23,6 +24,9 @@ def create_app(config=config_dict['dev']):
 
     api.add_namespace(order_namespace)
     api.add_namespace(auth_namespace)
+
+    jwt = JWTManager(app) ## instantiate the jwt manager into application
+
 
     ## something that i can call the database in the shell to instantiate
     @app.shell_context_processor

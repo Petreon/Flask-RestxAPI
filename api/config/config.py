@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from datetime import timedelta
 
 BASE_DIR=os.path.dirname(os.path.realpath(__file__))
 
@@ -11,6 +12,9 @@ class Config:
     host= os.getenv('HOST', '127.0.0.1') # dont work
     port = int(os.getenv('PORT',5000)) # dont work
     SQLALCHEMY_TRACK_MODIFICATIONS=False
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(minutes=30) #thw user token will expire in 30 minutes so they need to login again
+    JWT_REFRESH_TOKEN_EXPIRES = timedelta(minutes=30)
+    JWT_SECRET_KEY = os.getenv('JWT_SECRET_KEY') ## get the key from .env in runserver.py path
 
 
 class DevConfig(Config):
