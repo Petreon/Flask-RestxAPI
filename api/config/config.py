@@ -17,7 +17,7 @@ class DevConfig(Config):
     #taking the DEBUG value from .env file
     DEBUG=bool(os.getenv('DEBUG','False').lower() == 'true')
     SQLALCHEMY_ECHO=True
-    SQLALCHEMY_DATABASE_URI='sqlite:///'+os.path.join(BASE_DIR,'db.sqlite3')
+    SQLALCHEMY_DATABASE_URI='sqlite:///'+os.path.join(BASE_DIR,'db.sqlite3') ## local where the sqlite3 database will be started
 
 class TestConfig(Config):
     pass

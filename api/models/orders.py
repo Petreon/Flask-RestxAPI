@@ -2,6 +2,8 @@ from ..utils import db
 from enum import Enum
 from datetime import datetime
 
+
+## this enums is to simplify something in the database but i dont know how it works yet
 class Sizes(Enum):
     SMALL='small'
     MEDIUM='medium'

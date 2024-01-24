@@ -24,6 +24,7 @@ def create_app(config=config_dict['dev']):
     api.add_namespace(order_namespace)
     api.add_namespace(auth_namespace)
 
+    ## something that i can call the database in the shell to instantiate
     @app.shell_context_processor
     def make_shell_context():
         return {
