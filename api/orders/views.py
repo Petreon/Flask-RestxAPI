@@ -12,18 +12,29 @@ orders_model = order_namespace.model(
     'Order',{
         'id': fields.Integer(description = "An Order ID", required=True),
         'size': fields.String(description = "Size of order", required=True, enum=['SMALL','MEDIUM','LARGE','EXTRA_LARGE']),
-        'order_status': fields.String(description = " The status of the Order", required = True, enum=['PENDING','IN-TRANSIT','DELIVERED']),
+        'order_status': fields.String(description = " The status of the Order", required = True, enum=['PENDING','IN_TRANSIT','DELIVERED']),
         'flavor':fields.String(description="The pizza flavour", required = True),
         'quantity': fields.Integer(description = "Order Quantity", required = True)
 
     }
 )
 
+# creating an order parser to give an error if the request is not passed as expected
 order_parser = reqparse.RequestParser()
 order_parser.add_argument('size', type=str, required=True, help='Size of order', choices=['SMALL', 'MEDIUM', 'LARGE', 'EXTRA_LARGE'])
-order_parser.add_argument('order_status', type=str, required=False, help='The status of the Order', choices=['PENDING', 'IN-TRANSIT', 'DELIVERED'])
+order_parser.add_argument('order_status', type=str, required=False, help='The status of the Order', choices=['PENDING', 'IN_TRANSIT', 'DELIVERED'])
 order_parser.add_argument('flavour', type=str, required=True, help='The pizza flavour')
 order_parser.add_argument('quantity', type=int, required=True, help='The pizza flavour')
+
+
+order_status_model = order_namespace.model(
+    'OrderStatus', {
+        'order_status': fields.String(required=True, description = "Order status", enum=['PENDING','IN_TRANSIT','DELIVERED'])
+    }
+)
+
+order_status_parser = reqparse.RequestParser()
+order_status_parser.add_argument('order_status', type=str, required=True, choices=['PENDING', 'IN_TRANSIT', 'DELIVERED'])
 
 
 @order_namespace.route('/')
@@ -136,6 +147,7 @@ class GetOrderByUser(Resource):
         if user.username != get_jwt_identity():
             return {"message": "cannot access another User order"}, HTTPStatus.UNAUTHORIZED
         
+        ## this query is to get the order id from the user id
         order = Order.query.filter(Order.id == order_id, Order.user == user.id).first()
 
         return order_namespace.marshal(order,orders_model)
@@ -152,10 +164,10 @@ class UserOrders(Resource):
         jwt_username = get_jwt_identity()
 
         if not user:
-            print("ACHIEVED")
+            #print("ACHIEVED")
             return {"message":"User not found"}, HTTPStatus.NOT_FOUND
         if user.username != jwt_username:
-            print("ACHIEVED")
+            #print("ACHIEVED")
             return {"message": "User Not allowed to retrives orders from another User"}, 401
         
         ## is like a join
@@ -163,12 +175,27 @@ class UserOrders(Resource):
         if not orders:
             return {"message": "User dont have any orders"}, 401
         
+        #changing the way that we do the marshal because we need to return error to handle authentication
         return order_namespace.marshal(orders,orders_model), HTTPStatus.OK
 
 
 @order_namespace.route('/status/<int:order_id>')
 class UpdateOrderStatus(Resource):
 
+    @order_namespace.expect(order_status_parser)
+    @jwt_required()
     def patch(self,order_id):
         """Update an order's status"""
-        pass
+        # getting the data from the request
+        data = order_status_parser.parse_args()
+
+        order_to_update = Order.query.filter_by(id=order_id).first()
+
+        if order_to_update is None:
+            return {"message": f"Order Id = {order_id} doesn't exists"}, HTTPStatus.NOT_FOUND
+        
+        order_to_update.order_status = data['order_status']
+        db.session.commit()
+
+        return order_namespace.marshal(order_to_update, orders_model), HTTPStatus.OK
+

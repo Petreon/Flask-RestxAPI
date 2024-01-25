@@ -4,6 +4,8 @@ from ..models.users import User
 from werkzeug.security import generate_password_hash , check_password_hash
 from http import HTTPStatus
 from flask_jwt_extended import (create_access_token, create_refresh_token, jwt_required, get_jwt_identity, )
+from werkzeug.exceptions import Conflict
+from sqlalchemy.exc import IntegrityError
 
 ## creating a namespace "blueprint"
 auth_namespace = Namespace('auth', description="a namesoace for authentication")
@@ -41,20 +43,38 @@ login_model = auth_namespace.model(
 class SignUp(Resource):
 
     @auth_namespace.expect(signup_model)
-    @auth_namespace.marshal_with(user_model) ## return the user with the model that we created before
+     ## return the user with the model that we created before
     def post(self):
         """ Create a new User """
         data = request.get_json()
         ## data is a dictionary that i can retrieve with .get() method
-        new_user = User(
-            username = data.get('username'),
-            email = data.get('email'),
-            password_hash = generate_password_hash(data.get('password'))
-        )
+
+        user = None
+
+        #i dont think is the optmised way to do this, but the insert will do a query yet so i think is better to do this than give an database error to the user
+
+        user = User.query.filter_by(email=data['email']).first()
+        if user is not None:
+            raise Conflict(f"User with email {data.get('email')} exists")
+        
+        user = User.query.filter_by(username=data['username']).first()
+        if user is not None:
+            raise Conflict(f"Username already exists")
+
+
+        try:
+            new_user = User(
+                username = data.get('username'),
+                email = data.get('email'),
+                password_hash = generate_password_hash(data.get('password'))
+                )
+
+        except IntegrityError as e:
+            raise Conflict(f"User with email {data.get('email')} exists")
 
         new_user.save() ## save the user in the database
 
-        return new_user , HTTPStatus.CREATED
+        return auth_namespace.marshal(new_user, user_model) , HTTPStatus.CREATED
 
 
 
@@ -87,7 +107,7 @@ class login(Resource):
 
             return response, HTTPStatus.OK
         
-        return {"message":"User Not Found"}
+        return {"message":"User Not Found or Invalid password"}
 
 
 @auth_namespace.route('/refresh')

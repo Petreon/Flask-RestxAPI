@@ -12,7 +12,7 @@ its an simple Pizza Orders API, that you can create an user, create orders for p
 - generate an key with the python secrets module or anything that you want and create a key
 
 ## To create a database
-the sqlite database will be created in config folder with th default paramaters
+the sqlite database will be created in config folder using the default paramaters
 - $ flask shell
 - db.create_all()
 
