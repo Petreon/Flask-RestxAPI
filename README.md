@@ -32,6 +32,7 @@ when a JWT token is required we need to put in the headers, Authorization : valu
 - /orders/<int:id>: METHOD: DELETE, Delete the order, jwt token is required
 - /orders/user/<int:id>: METHOD: GET, get the all user specific orders, jwt token from user required
 - /orders/<int:order_id>/user/<int:user_id>: METHOD: GET, get a specific order from specific user, jwt token required
+- /orders/status/<int:order_id>: METHOD: PATCH, update the status code from the order, jwt token required
 
 ## Database "diagram"
 ![diagram](https://github.com/Petreon/Flask-RestxAPI/raw/main/database_diagram.drawio.png)
