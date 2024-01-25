@@ -5,6 +5,9 @@ its an simple Pizza Orders API, that you can create an user, create orders for p
 ## Initialize the server
 - create an enviroment viariable with $ export FLASK_APP=api/
 - initiate the server $ flask run --host=0.0.0.0 or python3 runserver.py (recommended)
+### Deploy the server
+- to deploy the server create an enviroment variable called CONFIG_STATE="prod"
+- and run the server with $ python3 runserver.py
 
 
 ## Create an .env folder

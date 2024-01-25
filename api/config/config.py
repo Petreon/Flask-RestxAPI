@@ -31,7 +31,8 @@ class TestConfig(Config):
     SQLALCHEMY_DATABASE_URI='sqlite://'
 
 class ProdConfig(Config):
-    pass
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    DEBUG=bool(os.getenv('DEBUG','False').lower() == 'true')
 
 config_dict = {
     'dev':DevConfig,
