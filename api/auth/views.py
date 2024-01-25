@@ -58,7 +58,7 @@ class SignUp(Resource):
      ## return the user with the model that we created before
     def post(self):
         """ Create a new User """
-        data = request.get_json()
+        data = user_model_parse.parse_args()
         ## data is a dictionary that i can retrieve with .get() method
 
         user = None
@@ -100,7 +100,7 @@ class login(Resource):
     def post(self):
         """ Generate a JWT pair """
 
-        data = request.get_json()
+        data = login_model_parse.parse_args()
 
         email = data.get('email')
         password = data.get('password')
