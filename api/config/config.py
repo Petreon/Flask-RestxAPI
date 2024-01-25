@@ -24,7 +24,11 @@ class DevConfig(Config):
     SQLALCHEMY_DATABASE_URI='sqlite:///'+os.path.join(BASE_DIR,'db.sqlite3') ## local where the sqlite3 database will be started
 
 class TestConfig(Config):
-    pass
+    TESTING=True
+    DEBUG=bool(os.getenv('DEBUG','False').lower() == 'true')
+    SQLALCHEMY_ECHO=True
+    ## in memory database
+    SQLALCHEMY_DATABASE_URI='sqlite://'
 
 class ProdConfig(Config):
     pass

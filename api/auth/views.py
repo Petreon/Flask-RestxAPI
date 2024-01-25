@@ -73,7 +73,7 @@ class SignUp(Resource):
         if user is not None:
             raise Conflict(f"Username already exists")
 
-
+        # this try except isnt working, probably because is getting the exception inside de User instance
         try:
             new_user = User(
                 username = data.get('username'),
