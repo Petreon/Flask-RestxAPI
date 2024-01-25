@@ -41,6 +41,9 @@ order_status_parser.add_argument('order_status', type=str, required=True, choice
 class OrderGetCreate(Resource):
 
     @order_namespace.marshal_with(orders_model)
+    @order_namespace.doc(
+        description="Retrieve all Orders"
+    )
     @jwt_required()
     def get(self):
         """ Get all orders"""
@@ -52,6 +55,9 @@ class OrderGetCreate(Resource):
 
     @order_namespace.expect(order_parser)
     @order_namespace.marshal_with(orders_model)
+    @order_namespace.doc(
+        description="Place an Order"
+    )
     @jwt_required()
     def post(self):
         """ Place a new order"""
@@ -90,6 +96,9 @@ class OrderGetCreate(Resource):
 class OrderUpdateDelete(Resource):
 
     @order_namespace.marshal_with(orders_model)
+    @order_namespace.doc(
+        description="Retrieve an order by order_id"
+    )
     @jwt_required()
     def get(self,order_id):
         """ Retrieve an order by id """
@@ -100,6 +109,9 @@ class OrderUpdateDelete(Resource):
         return order , HTTPStatus.OK
     
     @order_namespace.expect(order_parser)
+    @order_namespace.doc(
+        description="Update an Order giving all needed parameters"
+    )
     @jwt_required()
     def put(self,order_id):
         ## needs to implement if the order id can be modified for this user
@@ -121,6 +133,9 @@ class OrderUpdateDelete(Resource):
         return order_namespace.marshal(order_to_update,orders_model), HTTPStatus.OK
         
     @jwt_required()
+    @order_namespace.doc(
+        description="Delete a order given an order id, needs jwt token"
+    )
     def delete(self,order_id):
         """ Delete a Order """
 
@@ -137,6 +152,9 @@ class OrderUpdateDelete(Resource):
 @order_namespace.route("/<int:order_id>/user/<int:user_id>")
 class GetOrderByUser(Resource):
 
+    @order_namespace.doc(
+        description="Get a user specific Order"
+    )
     @jwt_required()
     def get(self,order_id,user_id):
         """ Get a user specific order """
@@ -156,6 +174,9 @@ class GetOrderByUser(Resource):
 @order_namespace.route("/user/<int:user_id>")
 class UserOrders(Resource):
     
+    @order_namespace.doc(
+        description="Retrieve all user Orders"
+    )
     @jwt_required()
     def get(self, user_id):
         """Get all orders by a specific user"""
@@ -182,6 +203,9 @@ class UserOrders(Resource):
 @order_namespace.route('/status/<int:order_id>')
 class UpdateOrderStatus(Resource):
 
+    @order_namespace.doc(
+        description="Update an order Status given the order Id"
+    )
     @order_namespace.expect(order_status_parser)
     @jwt_required()
     def patch(self,order_id):

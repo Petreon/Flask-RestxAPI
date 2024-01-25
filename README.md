@@ -1,6 +1,6 @@
 # Flask-RestxAPI
 Creating a REST API Project using Flask_RESTx and JWT authentication
-its an simple Pizza Orders API, that you can create an user, create orders for pizza like flavour, quantity and see the order_status
+its an simple Pizza Orders API, that you can create an user, create orders for pizza like flavour, quantity and see the order_status, you can see the swagger of the api in the '/' route
 
 ## Initialize the server
 - create an enviroment viariable with $ export FLASK_APP=api/

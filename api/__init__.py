@@ -21,7 +21,20 @@ def create_app(config=config_dict['dev']):
 
     migrate = Migrate(app,db)
 
-    api = Api(app)
+    # create an authorization jwt to use the swagger
+    authorizations = {
+        "Bearer Auth":{
+            'type':'apiKey',
+            'in': 'header',
+            'name': 'Authorization',
+            'description':'Add a JWT with ** Bearer &lt;JWT&gt; to authorize'
+        }
+    }
+
+    api = Api(app, title="Pizza Delivery API",
+              description="A REST API for a Pizza Delivery Service",
+              authorizations=authorizations,
+              security="Bearer Auth")
 
     api.add_namespace(order_namespace)
     api.add_namespace(auth_namespace)
