@@ -1,4 +1,4 @@
-from flask_restx import Namespace, Resource, fields ## Namespace is similar to a blueprint
+from flask_restx import Namespace, Resource, fields, reqparse ## Namespace is similar to a blueprint
 from flask import request
 from ..models.users import User
 from werkzeug.security import generate_password_hash , check_password_hash
@@ -31,6 +31,14 @@ user_model = auth_namespace.model(
     }
 )
 
+user_model_parse = reqparse.RequestParser()
+user_model_parse.add_argument('username', type=str, required=True, help="A username is required")
+user_model_parse.add_argument('email', type=str, required=True, help="An email is required")
+user_model_parse.add_argument('password', type=str, required=True, help="A password is required")
+user_model_parse.add_argument('is_active', type=bool, help="Indicates if the user is active")
+user_model_parse.add_argument('is_staff', type=bool, help="Indicates if the user is staff")
+
+
 login_model = auth_namespace.model(
     'Login',{
         'email': fields.String(required = True, description = "An email"),
@@ -38,11 +46,15 @@ login_model = auth_namespace.model(
     }
 )
 
+login_model_parse = reqparse.RequestParser()
+login_model_parse.add_argument('email', type=str, required=True, help="An email is required")
+login_model_parse.add_argument('password', type=str, required=True, help="A password is required")
+
 
 @auth_namespace.route('/signup') ## create a route /auth
 class SignUp(Resource):
 
-    @auth_namespace.expect(signup_model)
+    @auth_namespace.expect(user_model_parse)
      ## return the user with the model that we created before
     def post(self):
         """ Create a new User """
@@ -84,7 +96,7 @@ class SignUp(Resource):
 @auth_namespace.route('/login')
 class login(Resource):
 
-    @auth_namespace.expect(login_model)
+    @auth_namespace.expect(login_model_parse)
     def post(self):
         """ Generate a JWT pair """
 
